@@ -14,8 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from walet.views import UserViewSet, TransactionViewSet, TransactionAddView
+
+router = DefaultRouter()
+router.register('user', UserViewSet)
+router.register('transaction', TransactionViewSet)
 
 urlpatterns = [
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/', include(router.urls)),
+    path('api/transaction/<str:from_name>/<str:to_name>/', TransactionAddView.as_view()),
     path('admin/', admin.site.urls),
 ]
