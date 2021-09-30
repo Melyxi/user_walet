@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js" integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+
+</head>
+<body>
+<a href="{% url 'logout'%}" type="button" class="btn btn-primary">Выйте</a>
+<h1>Пользователь: {{request.user.username}}</h1>
+<a href="{% url 'profile' request.user.pk %}" type="button" class="btn btn-primary">Посмотреть профиль и счета</a>
+<button type="button" class="cash btn btn-primary">Отправить деньги</button>
+<a href="{% url 'transaction' request.user.pk%}" type="button" class="btn btn-primary">Посмотреть транзакции</a>
+
+<div id="users">
+
+
+</div>
+</body>
+</html>
+
+<script>
+    $('.cash').on('click', function(){
+        console.log('cash')
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'http://127.0.0.1:8181/api/user/', false);
+        xhr.send();
+
+        if (xhr.status != 200) {
+
+          alert( xhr.status + ': ' + xhr.statusText ); // пример вывода: 404: Not Found
+        } else {
+
+          alert( xhr.responseText ); // responseText -- текст ответа.
+        }
+
+
+    })
+
+
+</script>

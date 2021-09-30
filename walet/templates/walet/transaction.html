@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js" integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+</head>
+<body>
+    <div id="profile">
+        <div id='name_account'>
+
+
+        </div>
+        <div id='email'>
+
+
+        </div>
+        <div id='first_name'>
+
+
+        </div>
+        <div id='last_name'>
+
+
+        </div>
+
+        <div id="data">
+
+
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Имя счета</th>
+              <th scope="col">Количество средств</th>
+              <th scope="col">Дата создания</th>
+            </tr>
+          </thead>
+          <tbody id="cash_table">
+
+
+
+          </tbody>
+        </table>
+
+        <a href="{% url 'main' %}" type="button" class="btn btn-primary">На главную</a>
+    </div>
+</body>
+</html>
+
+<script>
+
+    console.log('cash')
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'http://127.0.0.1:8181/api/user/{{request.user.pk}}', false);
+    xhr.send();
+
+    if (xhr.status != 200) {
+
+      alert( xhr.status + ': ' + xhr.statusText ); // пример вывода: 404: Not Found
+    } else {
+
+      let data = $.parseJSON(xhr.responseText)
+      console.log(data)
+      $('#name_account').append(`<h3>Имя пользователя: `+data.username+`</h3>`)
+      $('#first_name').append(`<h3>Имя: `+data.first_name+`</h3>`)
+      $('#last_name').append(`<h3>Фамилия: `+data.last_name+`</h3>`)
+      $('#data').append(`<h3>Время создания: `+data.date_joined + `</h3>`)
+      $('#email').append(`<h3>email: `+ data.email + `</h3>`)
+
+      let account_cash = data.account_cash
+
+      account_cash.forEach(function(e) {
+
+            $('#cash_table').append(
+            `<tr id="`+ e.id + `">
+
+              <td><a href="/cashaccounts/` + e.id + `">`+ e.name_account + `</a> </td>
+              <td>` + e.value_cash + `</td>
+              <td>` + e.data_at + `</td>
+            </tr>`)
+
+      })
+
+
+
+    }
+
+</script>

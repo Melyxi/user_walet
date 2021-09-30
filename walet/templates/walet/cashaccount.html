@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js" integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+</head>
+<body>
+    <div id="profile">
+        <div id='id'>
+
+
+        </div>
+        <div id='name_account'>
+
+
+        </div>
+        <div id='value_cash'>
+
+
+        </div>
+        <div id='data_at'>
+
+
+        </div>
+
+
+        <a href="{% url 'main' %}" type="button" class="btn btn-primary">На главную</a>
+    </div>
+</body>
+</html>
+
+<script>
+    let url_account = document.location.pathname
+
+    let api_url = 'http://127.0.0.1:8181/api'+url_account
+    console.log(api_url)
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', api_url, false);
+    xhr.send();
+
+    if (xhr.status != 200) {
+
+      alert( xhr.status + ': ' + xhr.statusText ); // пример вывода: 404: Not Found
+    } else {
+
+      let data = $.parseJSON(xhr.responseText)
+      console.log(data)
+      $('#name_account').append(`<h3>Название счета: `+data.name_account+`</h3>`)
+      $('#value_cash').append(`<h3>Количество средств: `+data.value_cash+`</h3>`)
+      $('#data_at').append(`<h3>Время создания: `+data.data_at+`</h3>`)
+    }
+
+</script>

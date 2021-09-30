@@ -4,9 +4,10 @@ from rest_framework import serializers
 
 
 class AccountsSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = CashAccount
-        fields = ('id', 'name_account', 'value_cash', 'data_at')
+        fields = ('id', 'name_account', 'value_cash', 'data_at', 'user')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -14,10 +15,14 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'date_joined', 'account_cash')
+        fields = ('id', 'username', 'first_name', 'email', 'last_name', 'date_joined', 'account_cash')
 
 
 class TransactionSerializer(serializers.ModelSerializer):
+    from_account = AccountsSerializer()
+    to_account = AccountsSerializer()
+    from_user = UserSerializer()
+    to_user = UserSerializer()
     class Meta:
         model = Transaction
         fields = '__all__'

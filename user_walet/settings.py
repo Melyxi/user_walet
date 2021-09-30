@@ -52,6 +52,11 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'user_walet.urls'
+LOGIN_REDIRECT_URL = '/'
+REST_FRAMEWORK = {
+   'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+   'PAGE_SIZE': 5
+}
 
 TEMPLATES = [
     {
