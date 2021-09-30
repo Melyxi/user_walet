@@ -8,6 +8,7 @@ class AccountsSerializer(serializers.ModelSerializer):
         model = CashAccount
         fields = ('id', 'name_account', 'value_cash', 'data_at')
 
+
 class UserSerializer(serializers.ModelSerializer):
     account_cash = AccountsSerializer(source='cashaccount_set', many=True)
 
@@ -21,7 +22,18 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = '__all__'
 
+
 class TransactionCreateSerializer(serializers.ModelSerializer):
+    from_account = AccountsSerializer()
+    to_account = AccountsSerializer()
     class Meta:
         model = Transaction
         fields = ('from_account', 'to_account', 'cash_transaction')
+
+
+class GetTransactionSerializer(serializers.Serializer):
+
+    from_name = UserSerializer()
+    to_name = UserSerializer()
+    # from_user_accounts = AccountsSerializer(source='cashaccount_set', many=True)
+    # to_user_accounts = AccountsSerializer(source='cashaccount_set', many=True)

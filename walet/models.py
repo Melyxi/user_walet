@@ -14,12 +14,12 @@ class CashAccount(models.Model):
 
 
 class Transaction(models.Model):
-    from_user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='from_user')
-    from_account = models.ManyToManyField(CashAccount, related_name='from_account')
-    to_user = models.OneToOneField(User, on_delete=models.CASCADE)
-    to_account = models.OneToOneField(CashAccount, on_delete=models.CASCADE)
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='from_user')
+    from_account = models.ForeignKey(CashAccount, related_name='from_account', on_delete=models.CASCADE)
+    to_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    to_account = models.ForeignKey(CashAccount, on_delete=models.CASCADE)
     cash_transaction = models.PositiveIntegerField(verbose_name="Сумма перевода")
     data_at = models.DateTimeField(auto_now_add=timezone.now)
 
     def __str__(self):
-        return f"от {self.from_user} {[i for i in self.from_account.all()]} сумма: {self.cash_transaction} кому: {self.to_user} {self.to_account}"
+        return f"от {self.from_user} {self.from_account} сумма: {self.cash_transaction} кому: {self.to_user} {self.to_account}"
