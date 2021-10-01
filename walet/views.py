@@ -11,7 +11,7 @@ from django.contrib import auth
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-
+from django.db import transaction as transaction_db
 from walet.models import Transaction, CashAccount
 from walet.serializers import UserSerializer, AccountsSerializer, TransactionSerializer, TransactionCreateSerializer, \
     GetTransactionSerializer
@@ -91,6 +91,7 @@ class TransactionAddView(APIView):
 
         return Response(transaction.data)
 
+    @transaction_db.atomic
     def post(self, request, **kwargs):
         data = request.data
 
