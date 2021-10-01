@@ -35,9 +35,7 @@
 
 <script>
     let url_account = document.location.pathname
-
     let api_url = 'http://127.0.0.1:8181/api'+url_account
-    console.log(api_url)
     var xhr = new XMLHttpRequest();
     xhr.open('GET', api_url, false);
     xhr.send();
@@ -48,7 +46,7 @@
     } else {
 
       let data = $.parseJSON(xhr.responseText)
-      console.log(data)
+
       $('#name_account').append(`<h3>Название счета: `+data.name_account+`</h3>`)
       $('#value_cash').append(`<h3>Количество средств: `+data.value_cash+`</h3>`)
       $('#data_at').append(`<h3>Время создания: `+data.data_at+`</h3>`)

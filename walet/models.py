@@ -4,7 +4,7 @@ from django.utils import timezone
 
 
 class CashAccount(models.Model):
-    name_account = models.CharField(max_length=60, verbose_name="Имя счета")
+    name_account = models.CharField(max_length=60, verbose_name="Имя счета", unique=True)
     value_cash = models.PositiveIntegerField(verbose_name="Счет")
     data_at = models.DateTimeField(auto_now_add=timezone.now)
     user = models.ForeignKey(User, on_delete=models.CASCADE)

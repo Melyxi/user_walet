@@ -12,11 +12,11 @@
 
 </head>
 <body>
-<a href="{% url 'logout'%}" type="button" class="btn btn-primary">Выйте</a>
+<a href="{% url 'logout'%}" type="button" class="btn btn-primary">Выйти</a>
 <h1>Пользователь: {{request.user.username}}</h1>
 <a href="{% url 'profile' request.user.pk %}" type="button" class="btn btn-primary">Посмотреть профиль и счета</a>
-<button type="button" class="cash btn btn-primary">Отправить деньги</button>
-<a href="{% url 'transaction' request.user.pk%}" type="button" class="btn btn-primary">Посмотреть транзакции</a>
+<a href="{% url 'transfer' request.user.username %}" type="button" class="btn btn-primary">Отправить деньги</a>
+<a href="{% url 'transaction' request.user.pk %}" type="button" class="btn btn-primary">Посмотреть транзакции</a>
 
 <div id="users">
 

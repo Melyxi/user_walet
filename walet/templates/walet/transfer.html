@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js" integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+</head>
+<body>
+    <div id="profile">
+        <div style="height: 100px;">
+
+        </div>
+                <div id="error">
+
+        </div>
+        Мои счета:
+        <select id="my_check" class="custom-select" multiple>
+
+        </select>
+
+
+        Выбрать получателя:
+        <select id="user_name" name="select"> <!--Supplement an id here instead of using 'name'-->
+
+
+        </select>
+        Выбрать счет получателя:
+        <select id="user_cash" name="select"> <!--Supplement an id here instead of using 'name'-->
+
+
+        </select>
+        <label for="payment">Сумма для перевода:</label>
+
+        <input type="number" id="payment" name="payment">
+        <button type="button" id="add_transaction" class="btn btn-success">Перевести</button>
+
+
+        <div>
+             <a href="{% url 'main' %}" type="button" class="btn btn-primary">На главную</a>
+
+        </div>
+
+        <div id="transaction">
+
+
+        </div>
+
+
+
+    </div>
+</body>
+</html>
+
+<script>
+
+
+    let api_url = 'http://127.0.0.1:8181/api/user/'
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', api_url, false);
+    xhr.send();
+
+    if (xhr.status != 200) {
+
+      alert( xhr.status + ': ' + xhr.statusText ); // пример вывода: 404: Not Found
+    } else {
+
+      let data = $.parseJSON(xhr.responseText)
+
+      var data_list = data.results
+      data_list.forEach(function(e) {
+            if(e.username=="{{request.user.username}}"){
+                e.account_cash.forEach(function(cash){
+                    $('#my_check').append(`<option value="`+cash.id+`">`+ cash.name_account +`: `+ cash.value_cash +`</option>`)
+
+
+                })
+
+
+            }
+            else{
+                $('#user_name').append(`<option value="`+e.id+`">`+e.username+`</option>`)
+            }
+
+      })
+
+    }
+
+    $('#user_name option').each(function() {
+        if($(this).is(':selected')){
+            let name = $(this).text()
+            data_list.forEach(function(e) {
+                if(e.username==name){
+                    e.account_cash.forEach(function(cash){
+                        $('#user_cash').append(`<option value="`+cash.id+`">`+ cash.name_account +`</option>`)
+
+
+                    })
+            }
+
+            })
+
+        }
+    })
+
+
+    $('#user_name').on('click', function(){
+        $('#user_name option').each(function() {
+        if($(this).is(':selected')){
+            $('#user_cash').empty()
+            let name = $(this).text()
+
+            data_list.forEach(function(e) {
+
+                if(e.username==name){
+
+                    e.account_cash.forEach(function(cash){
+                        $('#user_cash').append(`<option value="`+cash.id+`">`+ cash.name_account +`</option>`)
+
+
+                    })
+            }
+
+            })
+
+        }
+    })
+
+    })
+
+    $('#add_transaction').on('click', function(){
+        $('#error').empty()
+        $('#transaction').empty()
+        var my_checkcash = []
+        $('#my_check option').each(function(){
+             if($(this).is(':selected')){
+                my_checkcash.push($(this).text().split(':')[0])
+             }
+
+        })
+        let to_name = ''
+        $('#user_name option').each(function() {
+            if($(this).is(':selected')){
+                to_name = $(this).text()
+            }
+        })
+
+        let user_cash = ""
+        $('#user_cash option').each(function(){
+            if($(this).is(':selected')){
+                user_cash = $(this).text()
+            }
+        })
+
+        let payment = Number($('#payment').val())
+
+        let post_tr = {"cash_transaction": payment, "from_account": my_checkcash, "to_account": user_cash}
+        console.log(post_tr)
+        let flag_valid = true
+        if(!payment){
+            $('#error').append(`<h5>Введите сумму</h5>`)
+
+            flag_valid = false
+        }
+        if(!user_cash){
+            $('#error').append(`<h5>Не выбран счет получателя</h5>`)
+
+            flag_valid = false
+        }
+
+        if(my_checkcash.length==0){
+            $('#error').append(`<h5>Не выбран ваш счет</h5>`)
+
+            flag_valid = false
+        }
+
+        if(flag_valid){
+            function getCookie(name) {
+                 var cookieValue = null;
+                 if (document.cookie && document.cookie !== '') {
+                     var cookies = document.cookie.split(';');
+                     for (var i = 0; i < cookies.length; i++) {
+                         var cookie = cookies[i].trim();
+                         // Does this cookie string begin with the name we want?
+                         if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                             cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                             break;
+                         }
+                     }
+                 }
+                 return cookieValue;
+                }
+            let csrftoken = getCookie('csrftoken');
+
+            let api_url = 'http://127.0.0.1:8181/api/transaction/{{request.user.username}}/'+ to_name + '/'
+            fetch(api_url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify(post_tr)
+
+            })
+           .then(function(response) {
+
+                if (!response.ok) {
+
+                    return Promise.reject(new Error(
+                        'Response failed: ' + response.status + ' (' + response.statusText + ')'
+                    ));
+                }
+
+                return response.json();
+            }).then(function(data) {
+                console.log(data.error)
+
+                if(data.error){
+                    $('#transaction').append(`<h3>`+ data.error + `</h3>`)
+                    console.log(data.error)
+                }
+                else{
+                console.log(data)
+
+<!--                $('#transaction').append(`<table class="table">-->
+<!--                          <thead>-->
+<!--                            <tr>-->
+<!--                              <th scope="col">От кого</th>-->
+<!--                              <th scope="col">Номер счета</th>-->
+<!--                              <th scope="col">Кому</th>-->
+<!--                              <th scope="col">Номер счета</th>-->
+<!--                              <th scope="col">Сумма</th>-->
+<!--                            </tr>-->
+<!--                          </thead>-->
+<!--                          <tbody id="cash_table">-->
+
+<!--                          </tbody>-->
+<!--                        </table> `)-->
+<!--                data.forEach(function(e){-->
+<!--                    $('#cash_table').append(-->
+<!--                     `<tr>-->
+<!--                            <td>`+"{{request.user.username}}" +`</td>-->
+<!--                            <<td>` +e.from_account.name_account +`</td>-->
+<!--                            <td>` + to_name + `</td>&ndash;&gt;-->
+<!--                            <td>` + e.to_account.name_account + `</td>-->
+<!--                            <td>` + e.cash_transaction + `</td>-->
+
+<!--                    </tr>`)-->
+<!--                    })-->
+                }
+            }).catch(function(error) {
+               console.log(error)
+            });
+
+        }
+
+    })
+
+
+</script>
