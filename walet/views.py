@@ -71,7 +71,7 @@ class TransactionViewSet(ModelViewSet):
 
 class UserTransactionView(APIView, LimitOffsetPagination):
     def get(self, request, **kwargs):
-        from_user = Transaction.objects.filter(Q(from_user__id=kwargs['user']) | Q(to_user__id=kwargs['user']))
+        from_user = Transaction.objects.filter(Q(from_user__id=kwargs['user']) | Q(to_user__id=kwargs['user'])).order_by('-data_at')
         results = self.paginate_queryset(from_user, request, view=self)
         serializer = TransactionSerializer(results, many=True)
         return self.get_paginated_response(serializer.data)
